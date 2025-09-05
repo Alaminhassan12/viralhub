@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { BetaAnalyticsDataClient } = require('@google-analytics/data');
+const { google } = require('googleapis');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -19,15 +19,17 @@ app.use('/admin', express.static(path.join(__dirname, '..', 'admin')));
 
 
 // --- Google Analytics Client Initialization ---
-let analyticsDataClient;
+let auth;
+let analyticsdata;
 try {
-    analyticsDataClient = new BetaAnalyticsDataClient({
+    auth = new google.auth.GoogleAuth({
         credentials: {
             client_email: process.env.GOOGLE_CLIENT_EMAIL,
-            // The private key needs to have its newlines correctly interpreted
             private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         },
+        scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
     });
+    analyticsdata = google.analyticsdata({ version: 'v1beta', auth });
 } catch (error) {
     console.error("Failed to initialize Google Analytics client:", error);
     console.error("Please ensure GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are set correctly in your .env file.");
@@ -38,7 +40,7 @@ try {
 app.get('/api/analytics', async (req, res) => {
     const propertyId = process.env.GA_PROPERTY_ID;
 
-    if (!analyticsDataClient) {
+    if (!analyticsdata) {
         return res.status(500).json({ error: 'Analytics client is not initialized. Check server logs for details.' });
     }
 
@@ -48,19 +50,21 @@ app.get('/api/analytics', async (req, res) => {
 
     try {
         console.log(`Fetching report for property: properties/${propertyId}`);
-        const [response] = await analyticsDataClient.runReport({
+        const [response] = await analyticsdata.properties.runReport({
             property: `properties/${propertyId}`,
-            dateRanges: [
-                {
-                    startDate: '28daysAgo',
-                    endDate: 'today',
-                },
-            ],
-            metrics: [
-                { name: 'activeUsers' },       // Represents total unique users
-                { name: 'screenPageViews' },   // Represents total page views
-                { name: 'bounceRate' },        // Represents bounce rate
-            ],
+            requestBody: {
+                dateRanges: [
+                    {
+                        startDate: '28daysAgo',
+                        endDate: 'today',
+                    },
+                ],
+                metrics: [
+                    { expression: 'activeUsers' },
+                    { expression: 'screenPageViews' },
+                    { expression: 'bounceRate' },
+                ],
+            }
         });
 
         const metrics = {
@@ -82,15 +86,14 @@ app.get('/api/analytics', async (req, res) => {
         res.json({
             totalVisitors: metrics.activeUsers,
             pageViews: metrics.screenPageViews,
-            // Bounce rate is a ratio; multiply by 100 for percentage
             bounceRate: (parseFloat(metrics.bounceRate) * 100).toFixed(2) + '%',
         });
 
     } catch (error) {
         console.error('Error fetching Google Analytics data:', error);
         res.status(500).json({
-            error: 'Failed to fetch analytics data.', 
-            details: error.message 
+            error: 'Failed to fetch analytics data.',
+            details: error.message
         });
     }
 });
