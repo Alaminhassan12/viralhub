@@ -1,0 +1,248 @@
+/* --- Modern Theme --- */
+
+/* --- ভেরিয়েবলস --- */
+:root {
+    --primary-color: #00a8ff; /* উজ্জ্বল নীল */
+    --background-color: #1a1a1a; /* ডার্ক ব্যাকগ্রাউন্ড */
+    --surface-color: rgba(255, 255, 255, 0.05); /* গ্লাস ইফেক্ট সারফেস */
+    --text-color: #e0e0e0;
+    --heading-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --border-radius: 15px;
+    --transition-speed: 0.3s;
+}
+
+/* --- বেসিক স্টাইল --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.7;
+    overflow-x: hidden; /* আনুভূমিক স্ক্রলবার প্রতিরোধ */
+}
+
+/* --- Navbar --- */
+.navbar {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+.nav-link {
+    color: var(--text-color) !important;
+    transition: color var(--transition-speed) ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+/* --- Search Bar --- */
+#search-form .form-control {
+    background-color: var(--surface-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 0.75rem 1.25rem;
+}
+
+#search-form .form-control::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+#search-form .form-control:focus {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(0, 168, 255, 0.25);
+}
+
+/* --- About Section --- */
+.about-section {
+    background-color: var(--surface-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Main Content & Gallery --- */
+main {
+    padding: 20px 0;
+}
+
+.gallery-item {
+    display: block;
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    height: 100%;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 12px 35px 0 var(--shadow-color);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery-item-title {
+    padding: 15px;
+}
+
+.gallery-item-title h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.post-stats span {
+    display: flex;
+    align-items: center;
+}
+
+.post-stats .bi {
+    margin-right: 5px;
+}
+
+/* --- Featured & Popular Sections --- */
+#featured-posts h2,
+#popular-posts h2 {
+    color: var(--heading-color);
+    font-weight: 700;
+}
+
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.card-title {
+    color: var(--heading-color);
+}
+
+.overflow-auto::-webkit-scrollbar {
+    height: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+    background: var(--surface-color);
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+    background: #007bff;
+}
+
+
+/* --- লোডিং স্পিনার --- */
+#loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* --- ফুটার --- */
+footer .text-primary {
+    color: var(--primary-color) !important;
+}
+
+footer a.text-white:hover {
+    color: var(--primary-color) !important;
+}
+
+footer .list-inline-item a:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+/* --- Media Queries for Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    .about-section .text-start {
+        text-align: center !important;
+    }
+
+    footer .text-md-start {
+        text-align: center !important;
+    }
+
+    footer .text-md-end {
+        text-align: center !important;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    main {
+        padding: 15px 0;
+    }
+
+    .gallery-item-title {
+        padding: 10px;
+    }
+
+    .gallery-item-title h5 {
+        font-size: 0.9rem;
+    }
+}
